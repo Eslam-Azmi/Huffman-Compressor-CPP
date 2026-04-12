@@ -3,7 +3,7 @@ A C++ CLI tool for file compression using Huffman Coding. Features frequency ana
 
 - [x] **Sprint 1: Frequency Analysis** — Reads text files and calculates character distribution.
 - [x] **Sprint 2: Huffman Tree Construction** — Built a greedy-algorithm tree using Min-Heaps.
-- [/] **Sprint 3: Encoding & Compression** — **[In Progress]**
+- [ ] **Sprint 3: Encoding & Compression** — **[In Progress]**
     - [x] Recursive bit-code generation (DFS traversal).
     - [ ] Bit-packing and binary file output.
 - [ ] **Sprint 4: Decompression Logic** — Rebuilding the original file.
