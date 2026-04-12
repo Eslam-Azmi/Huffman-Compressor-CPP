@@ -1,0 +1,4 @@
+Data structures are the building blocks of efficient software.
+By mastering algorithms like Huffman Coding, a programmer can transform raw information into a compact and optimized format.
+This project proves that bit-level control is a powerful skill in the hands of a computer science student.
+Let the compression begin!
