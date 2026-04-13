@@ -118,6 +118,35 @@ int main(){
         cout << display << " : " << pair.second << endl;
     }
 
+    // Reseting the cursor for the target file
     inFile.clear();
+    inFile.seekg(0, ios::beg);
+
+    // Encoding every charater to thier assigned bits (comprission)
+    string encodedString;
+    while (inFile.get(c)){
+        encodedString += Huffman[c];
+    }
+
+    ofstream outFile("compressed.huff", ios::binary);
+    // the body of the binary code with the padding 
+    int bitCounter = 0;
+    unsigned char byte = 0;
+    for (char c : encodedString){
+        bitCounter++;
+        byte <<= 1; // making room for the next bit 
+        if (c == '1') byte += 1;
+        if (bitCounter == 8){
+            outFile.put(byte);
+            bitCounter = 0;
+            byte = 0;
+        }
+    }
+
+    if (bitCounter > 0){
+        byte <<= (8 - bitCounter);
+        outFile.put(byte);
+    }
+
     return 0; 
 }
