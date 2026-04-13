@@ -1,6 +1,7 @@
 # Ignore executables
 *.exe
 *.out
+*.huff
 
 # Ignore VS Code temporary files
 .vscode/
