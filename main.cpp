@@ -129,6 +129,19 @@ int main(){
     }
 
     ofstream outFile("compressed.huff", ios::binary);
+
+    // Metadata for the decompressor
+    int mapSize = counts.size();
+    outFile.write(reinterpret_cast<const char*>(&mapSize), sizeof(mapSize));
+
+    for (auto const& [ch, freq] : counts){
+        outFile.put(ch);
+        outFile.write(reinterpret_cast<const char*>(&freq), sizeof(freq));
+    }
+
+    int totalBits = encodedString.length();
+    outFile.write(reinterpret_cast<const char*>(&totalBits), sizeof(totalBits));
+
     // the body of the binary code with the padding 
     int bitCounter = 0;
     unsigned char byte = 0;
