@@ -48,6 +48,7 @@ void generateHuffman(Node* root, string bits, unordered_map<char, string>& Huffm
 }
 
 int main(){
+    // Reading the file and counting the frequency for each character
     string filename;
 
     cout << "Filename : ";
@@ -76,7 +77,7 @@ int main(){
 
         cout << display << " : " << pair.second << endl;
     }
-
+    // Nodes for every unique character and putting them in priority queue(min)
     priority_queue<Node*, vector<Node*>, Compare> pq; 
 
     for (auto& pair : counts){
@@ -102,6 +103,7 @@ int main(){
     // };
     // printTree(printTree, pq.top(), 0);
 
+    // Making the Huffman tree for assigning code for every character 
     unordered_map<char, string> Huffman;
 
     generateHuffman(root, "", Huffman);
