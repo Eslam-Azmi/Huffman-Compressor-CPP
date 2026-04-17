@@ -7,17 +7,21 @@ A C++ CLI tool for file compression using Huffman Coding. Features frequency ana
     - [x] Recursive bit-code generation (DFS traversal).
     - [x] Bit-packing and binary file output.
     - [x] Custom Binary Header implementation (Portability).
-- [ ] **Sprint 4: Decompression Logic** — Rebuilding the original file.
+- [x] **Sprint 4: Decompression Logic** — Rebuilding the original file.
 
-## 🚀 Current Milestone: Stage 3 Complete
-The engine is now a fully functional binary compressor. It converts source text into a packed `.huff` file. By implementing a structured header (storing character maps and bit counts), the file is now self-contained and ready for the decompression stage.
+## 🚀 Current Milestone: Project Complete (Stage 4)
+The engine is now a full-cycle Huffman compressor and decompressor. It can compress any text file into a packed `.huff` format and reconstruct it bit-for-bit. By implementing a **Node ID stabilizer**, the tool ensures 100% data integrity, solving the common issue of inconsistent tree reconstruction during decompression.
 
 ## 📊 Technical Highlights
-* **Binary I/O:** Utilizes `ios::binary` and `ofstream::put` for raw byte manipulation.
-* **Efficient Bit-Packing:** Groups bit-strings into `unsigned char` bytes to achieve true physical compression.
-* **Deterministic Headers:** Stores a metadata map to ensure the Huffman tree can be reconstructed during decompression.
+* **Binary I/O:** Utilizes `ios::binary` and `ofstream::put` for raw byte manipulation, ensuring cross-platform compatibility and preventing character translation issues.
+* **Deterministic Tree Construction:** Employs a unique ID-tracking system during tree building. This ensures the Huffman tree is reconstructed identically in both modes, even when multiple characters share the same frequency.
+* **Efficient Bit-Packing:** Groups bit-strings into `unsigned char` bytes to achieve true physical compression. It accurately ignores trailing padding by storing and checking a `totalBits` counter.
+* **Portable Headers:** Stores metadata (character maps and frequency counts) within the `.huff` file, allowing it to be decompressed without needing the original source file.
 
-## 🛠️ How to Run (Current Version)
-1. **Compile:** `g++ main.cpp -o compressor`
-2. **Run:** `./compressor`
-3. **Process:** Enter the filename (e.g., `test.txt`). The program will generate `compressed.huff` in the current directory.
+---.
+
+## 🛠️ How to Run
+
+### 1. Build the Tool
+```bash
+g++ main.cpp -o huffman_tool
