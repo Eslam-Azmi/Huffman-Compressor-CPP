@@ -10,12 +10,12 @@ void decompress();
 
 struct Node{
     int freq;
-    char character;
+    unsigned char character;
     int id;
     Node* left;
     Node* right;
 
-    Node (char character, int frequency, int id){
+    Node (unsigned char character, int frequency, int id){
         this->character = character;
         freq = frequency;
         this->id = id;
@@ -42,7 +42,7 @@ struct Compare {
     }
 };
 
-void generateHuffman(Node* root, string bits, unordered_map<char, string>& Huffman){
+void generateHuffman(Node* root, string bits, unordered_map<unsigned char, string>& Huffman){
     if (root == nullptr) return;
 
     if (root->isLeaf()){
@@ -54,7 +54,7 @@ void generateHuffman(Node* root, string bits, unordered_map<char, string>& Huffm
     generateHuffman(root->right, bits + "1", Huffman);
 }
 
-Node* buildTree(unordered_map<char, int>& counts){
+Node* buildTree(unordered_map<unsigned char, int>& counts){
     priority_queue<Node*, vector<Node*>, Compare> pq; 
     int nodeID = 1000;
 
@@ -103,9 +103,9 @@ void compress(){
         return; 
     }
 
-    char c;
-    unordered_map<char, int> counts;
-    while (inFile.get(c)){
+    unsigned char c;
+    unordered_map<unsigned char, int> counts;
+    while (inFile.get(reinterpret_cast<char&>(c))){
         counts[c]++;
     }
 
@@ -132,7 +132,7 @@ void compress(){
     // printTree(printTree, pq.top(), 0);
 
     // Making the Huffman tree for assigning code for every character 
-    unordered_map<char, string> Huffman;
+    unordered_map<unsigned char, string> Huffman;
 
     generateHuffman(root, "", Huffman);
 
@@ -152,13 +152,19 @@ void compress(){
 
     // Encoding every charater to thier assigned bits (comprission)
     string encodedString;
-    while (inFile.get(c)){
+    while (inFile.get(reinterpret_cast<char&>(c))){
         encodedString += Huffman[c];
     }
 
     ofstream outFile("compressed.huff", ios::binary);
 
-    // Metadata for the decompressor (unique characters - frequincy for each char - length of bits)
+    // Metadata for the decompressor (extention - unique characters - frequincy for each char - length of bits)
+    auto pos = filename.rfind('.');
+    string extention = filename.substr(pos+1);
+    int extLength = extention.length();
+    outFile.write(reinterpret_cast<const char*>(&extLength), sizeof(extLength));
+    outFile.write(extention.c_str(), extLength);
+
     int mapSize = counts.size();
     outFile.write(reinterpret_cast<const char*>(&mapSize), sizeof(mapSize));
 
@@ -192,13 +198,19 @@ void compress(){
 
 void decompress(){
     ifstream inFile("compressed.huff", ios::binary);
+
+    int extLength;
+    inFile.read(reinterpret_cast<char*>(&extLength), sizeof(extLength));
+
+    string extention(extLength, ' ');
+    inFile.read(&extention[0], extLength);
     
     int mapSize; 
     inFile.read(reinterpret_cast<char*>(&mapSize), sizeof(mapSize));
 
-    unordered_map<char, int> counts;
+    unordered_map<unsigned char, int> counts;
     for (int i = 0; i < mapSize; i++){
-        char c = inFile.get();
+        unsigned char c = (unsigned char)inFile.get();
         int freq;
 
         inFile.read(reinterpret_cast<char*>(&freq), sizeof(freq));
@@ -209,8 +221,8 @@ void decompress(){
     inFile.read(reinterpret_cast<char*>(&totalBits), sizeof(totalBits));
     
     Node* root = buildTree(counts);
-
-    ofstream outFile("decompressed.txt", ios::binary);
+    string fullFileName = "decompressed." + extention;
+    ofstream outFile(fullFileName, ios::binary);
 
     Node* current = root; 
     int bitRead = 0;
